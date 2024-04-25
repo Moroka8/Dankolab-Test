@@ -4,25 +4,31 @@ using UnityEngine;
 
 public class PanelEditor : MonoBehaviour
 {
-    public GameObject prefab;
-    public Transform panel;
-    public int count = 5;
+    public GameObject obj;
+    public Panel panel;
+    public Transform canvas;
 
-    public void AddObject()
-    {
-        for (int i = 0; i < count; i++)
-        {
-            GameObject block = (GameObject)Instantiate(prefab);
-            block.transform.SetParent(panel.transform, false);
-        }
+    public void CreateGamePanel() {
+        var objs = GenerateObjects(obj, 5);
+        CreatePanel(objs);
     }
 
-    public void ClearPanel() {
-        int childCount = panel.childCount;
-        for (int i = childCount - 1; i >= 0; i--)
-        {
-            Transform child = panel.GetChild(i);
-            Destroy(child.gameObject);
+    public void CreateSettingsPanel() {
+        CreatePanel();
+    }
+
+    private void CreatePanel(List<GameObject> objs=null) {
+        var p = Instantiate(panel, canvas);
+        //В дальнейшем можно передавать список GameObject для наполнения
+        //Панели, например, из json
+        if (objs != null) p.AddObjects(objs);
+    }
+
+    private List<GameObject> GenerateObjects(GameObject obj, int count) {
+        List<GameObject> objs = new List<GameObject>();
+        for (int i = 0; i < count; ++i) {
+            objs.Add(obj);
         }
+        return objs;
     }
 }
